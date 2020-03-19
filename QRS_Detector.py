@@ -34,7 +34,10 @@ def qrs_detect(raw_signal, win_size=0):
     plot(raw_signal, title="Raw Signal")
     
     noise_filtered_signal = remove_noise(raw_signal)
+    
     diff = differentiate(noise_filtered_signal)
+    plot(diff, title="Diff Signal")
+    
     sqrd = square(diff)
     smoothed = smooth(sqrd)
     thresholded = threshold(smoothed)
@@ -55,9 +58,18 @@ def bandpass_filter(signal):
     pass
 
 def differentiate(signal):
-    # TODO
+    # diff_signal = signal.copy()
+    signal = np.array(signal)
+    t_0 = signal[:-4]
+    t_1 = signal[1:-3]
+    # T_2 = signal[2:-2]
+    t_3 = signal[3:-1]
+    t_4 = signal[4:]
     
-    pass
+    sampling_interval = (1/256)
+    diff_signal = (1/(8*sampling_interval))*\
+        (-t_0 - (2*t_1) + (2*t_3) + (t_4))
+    return diff_signal
 
 def square(signal):
     # TODO
@@ -78,8 +90,8 @@ def rr_define(rr_intervals):
     pass
 
 def plot(signal, title = "Plot of CT signal"):
-    t = np.linspace(-0.02, 0.05, signal[0].shape[0])
-    plt.plot(t, signal[0])
+    t = np.linspace(-0.02, 0.05, signal.shape[0])
+    plt.plot(t, signal)
     plt.xlabel('t')
     plt.ylabel('x(t)')
     plt.title(title)
@@ -89,7 +101,7 @@ def plot(signal, title = "Plot of CT signal"):
 
 if __name__ == '__main__':
     raw_signal = pd.read_csv("DataN.txt", header=None)
-    rr_graph = qrs_detect(raw_signal) 
+    rr_graph = qrs_detect(raw_signal[0]) 
         
     
     
