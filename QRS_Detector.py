@@ -31,6 +31,8 @@ def qrs_detect(raw_signal, win_size=0):
     contains the corresponding RR intervals
 
     """
+    raw_signal = np.array(raw_signal)
+    
     plot(raw_signal, title="Raw Signal")
     
     noise_filtered_signal = remove_noise(raw_signal)
@@ -59,7 +61,6 @@ def bandpass_filter(signal):
 
 def differentiate(signal):
     # diff_signal = signal.copy()
-    signal = np.array(signal)
     t_0 = signal[:-4]
     t_1 = signal[1:-3]
     # T_2 = signal[2:-2]
@@ -100,8 +101,8 @@ def plot(signal, title = "Plot of CT signal"):
 
 
 if __name__ == '__main__':
-    raw_signal = pd.read_csv("DataN.txt", header=None)
-    rr_graph = qrs_detect(raw_signal[0]) 
+    raw_signal = pd.read_csv("DataN.txt", header=None)[0]
+    rr_graph = qrs_detect(raw_signal) 
         
     
     
