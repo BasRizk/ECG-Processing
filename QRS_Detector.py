@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 """
 Apply your function to the ECG signal provided in the file “DataN.txt”.
 The sampling rate of this ECG signal is 256 Hz. You will need to suggest a
@@ -30,6 +31,8 @@ def qrs_detect(raw_signal, win_size=0):
     contains the corresponding RR intervals
 
     """
+    plot(raw_signal, title="Raw Signal")
+    
     diff = differentiate(raw_signal)
     sqrd = square(diff)
     smoothed = smooth(sqrd)
@@ -39,6 +42,7 @@ def qrs_detect(raw_signal, win_size=0):
 
 def differentiate(signal):
     # TODO
+    
     pass
 
 def square(signal):
@@ -59,11 +63,19 @@ def rr_define(rr_intervals):
     # TODO
     pass
 
+def plot(signal, title = "Plot of CT signal"):
+    t = np.linspace(-0.02, 0.05, signal[0].shape[0])
+    plt.plot(t, signal[0])
+    plt.xlabel('t')
+    plt.ylabel('x(t)')
+    plt.title(title)
+    plt.xlim([-0.02, 0.05])
+    plt.show()
 
 if __name__ == '__main__':
     raw_signal = pd.read_csv("DataN.txt", header=None)
     rr_graph = qrs_detect(raw_signal) 
-    
+        
     
     
 
