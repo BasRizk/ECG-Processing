@@ -73,8 +73,7 @@ def differentiate(signal):
     return diff_signal
 
 def square(signal):
-    # TODO
-    pass
+    return np.square(signal)
 
 def smooth(signal):
     # TODO
