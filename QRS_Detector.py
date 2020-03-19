@@ -2,6 +2,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy import signal
 """
 Apply your function to the ECG signal provided in the file “DataN.txt”.
 The sampling rate of this ECG signal is 256 Hz. You will need to suggest a
@@ -47,17 +48,26 @@ def qrs_detect(raw_signal, win_size=0):
     return rr_intervals
 
 def remove_noise(sig):
-    sig = notch_filter(sig)
-    sig = bandpass_filter(sig)
-    return sig
+    filtered_signal = notch_filter(sig)
+    filtered_signal = bandpass_filter(filtered_signal, 0.1, 45, 5)        #bandpass(signal, lowcut, highcut, order)
+    return filtered_signal
 
 def notch_filter(sig):
-    #TODO
-    pass
+    fs = 256.0
+    f0 = 50.0
+    Q = 30.0
+    b, a = signal.iirnotch(f0, Q, fs)
+    filtered_signal = signal.lfilter(b, a, sig)
+    return filtered_signal
 
-def bandpass_filter(sig):
-    #TODO
-    pass
+def bandpass_filter(sig, low_freq, high_freq, order):
+    fs = 256.0
+    nyquist_freq = fs * 0.5
+    low = low_freq / nyquist_freq
+    high = high_freq / nyquist_freq
+    b, a = signal.butter(order, [low, high], 'band')
+    filtered_signal = signal.lfilter(b, a, sig)
+    return filtered_signal
 
 def differentiate(sig):
     # diff_signal = signal.copy()
