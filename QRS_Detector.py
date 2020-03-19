@@ -111,12 +111,13 @@ def rr_define(rr_intervals):
     pass
 
 def plot(sig, title = "Plot of CT signal"):
-    t = np.linspace(0, 0.05, sig.shape[0])
+    end_time = (1/256)*sig.shape[0]
+    t = np.linspace(0, end_time , sig.shape[0])
     plt.plot(t, sig)
     plt.xlabel('t')
     plt.ylabel('x(t)')
     plt.title(title)
-    plt.xlim([0, 0.05])
+    plt.xlim([0, end_time])
     plt.show()
 
 
