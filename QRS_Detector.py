@@ -33,12 +33,26 @@ def qrs_detect(raw_signal, win_size=0):
     """
     plot(raw_signal, title="Raw Signal")
     
-    diff = differentiate(raw_signal)
+    noise_filtered_signal = remove_noise(raw_signal)
+    diff = differentiate(noise_filtered_signal)
     sqrd = square(diff)
     smoothed = smooth(sqrd)
     thresholded = threshold(smoothed)
     rr_intervals = rr_define(thresholded)
     return rr_intervals
+
+def remove_noise(signal):
+    signal = notch_filter(signal)
+    signal = bandpass_filter(signal)
+    return signal
+
+def notch_filter(signal):
+    #TODO
+    pass
+
+def bandpass_filter(signal):
+    #TODO
+    pass
 
 def differentiate(signal):
     # TODO
@@ -71,6 +85,7 @@ def plot(signal, title = "Plot of CT signal"):
     plt.title(title)
     plt.xlim([-0.02, 0.05])
     plt.show()
+
 
 if __name__ == '__main__':
     raw_signal = pd.read_csv("DataN.txt", header=None)
