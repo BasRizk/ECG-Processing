@@ -16,7 +16,7 @@ complex
     - 
 """
 
-def qrs_detect(raw_signal, win_size=0):
+def qrs_detect(raw_signal, win_size=5):
     """
 
     Parameters
@@ -44,7 +44,7 @@ def qrs_detect(raw_signal, win_size=0):
     sqrd = square(diff)
     plot(sqrd, title="Squared Signal")
 
-    smoothed = smooth(sqrd)
+    smoothed = smooth(sqrd, win_size)
     plot(smoothed, title="Smoothed Signal")
 
     thresholded = threshold(smoothed)
@@ -78,10 +78,8 @@ def bandpass_filter(sig, low_freq, high_freq, order):
     return filtered_signal
 
 def differentiate(sig):
-    # diff_signal = signal.copy()
     t_0 = sig[:-4]
     t_1 = sig[1:-3]
-    # T_2 = signal[2:-2]
     t_3 = sig[3:-1]
     t_4 = sig[4:]
     
@@ -91,13 +89,18 @@ def differentiate(sig):
     return diff_signal
 
 def square(sig):
-    return np.square(signal)
+    return np.square(sig)
 
-def smooth(sig):
-    # TODO
+def smooth(sig, win_size=5):
     # smooth the squared signal using a moving average window
-    
-    pass
+    smoothed_signal = np.zeros(sig.shape)
+    for i in range(win_size, len(sig)):
+        avg_value = 0
+        for v_i in range(win_size):
+            avg_value += sig[i-win_size]
+        avg_value /= win_size
+        smoothed_signal[i] = avg_value
+    return smoothed_signal
 
 def threshold(sig):
     # TODO
@@ -108,17 +111,17 @@ def rr_define(rr_intervals):
     pass
 
 def plot(sig, title = "Plot of CT signal"):
-    t = np.linspace(-0.02, 0.05, sig.shape[0])
+    t = np.linspace(0, 0.05, sig.shape[0])
     plt.plot(t, sig)
     plt.xlabel('t')
     plt.ylabel('x(t)')
     plt.title(title)
-    plt.xlim([-0.02, 0.05])
+    plt.xlim([0, 0.05])
     plt.show()
 
 
 if __name__ == '__main__':
-    raw_signal = pd.read_csv("DataN.txt", header=None)[0]
+    raw_signal = pd.read_csv("DataN.txt", header=None)[0][:100]
     rr_graph = qrs_detect(raw_signal) 
         
     
