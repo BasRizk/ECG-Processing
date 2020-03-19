@@ -33,18 +33,26 @@ def qrs_detect(raw_signal, win_size=0):
 
     """
     raw_signal = np.array(raw_signal)
-    
     plot(raw_signal, title="Raw Signal")
     
     noise_filtered_signal = remove_noise(raw_signal)
-    
+    plot(noise_filtered_signal, title="Noise Removed Signal")
+
     diff = differentiate(noise_filtered_signal)
-    plot(diff, title="Diff Signal")
+    plot(diff, title="Differentiated Signal")
     
     sqrd = square(diff)
+    plot(sqrd, title="Squared Signal")
+
     smoothed = smooth(sqrd)
+    plot(smoothed, title="Smoothed Signal")
+
     thresholded = threshold(smoothed)
+    plot(thresholded, title="Thresholded Signal")
+
     rr_intervals = rr_define(thresholded)
+    plot(rr_intervals, title="RR-Intervals")
+
     return rr_intervals
 
 def remove_noise(sig):
@@ -82,14 +90,8 @@ def differentiate(sig):
         (-t_0 - (2*t_1) + (2*t_3) + (t_4))
     return diff_signal
 
-<<<<<<< HEAD
-def square(signal):
-    return np.square(signal)
-=======
 def square(sig):
-    # TODO
-    pass
->>>>>>> e85f5e0226edf4afd8712bde6ae286a9daa9609a
+    return np.square(signal)
 
 def smooth(sig):
     # TODO
