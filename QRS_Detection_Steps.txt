@@ -1,0 +1,11 @@
+1-Removing of Noise that occurs due to artifacts :-
+	a) Using notch filter.
+	b) Using band pass filter 0.1Hz-45Hz.
+
+2-Overcoming baseline drifts :-
+	a) Differentiating the ECG Signal after removal of noise using the equation in slide 20.
+	b) Squaring the dervative of the original signal to amplify the output.
+
+3-Smoothing the resulting signal using moving average window with size N(equation can be found in slide 22).
+
+4-Setting the thereshold, using a proposed idea, above which we consider the peak value as R wave. 
