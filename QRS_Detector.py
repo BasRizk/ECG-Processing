@@ -30,12 +30,27 @@ def qrs_detect(raw_signal, win_size=0):
     contains the corresponding RR intervals
 
     """
-    diff = differentiate(raw_signal)
+    
+    noise_filtered_signal = remove_noise(raw_signal)
+    diff = differentiate(noise_filtered_signal)
     sqrd = square(diff)
     smoothed = smooth(sqrd)
     thresholded = threshold(smoothed)
     rr_intervals = rr_define(thresholded)
     return rr_intervals
+
+def remove_noise(signal):
+    signal = notch_filter(signal)
+    signal = bandpass_filter(signal)
+    return signal
+
+def notch_filter(signal):
+    #TODO
+    pass
+
+def bandpass_filter(signal):
+    #TODO
+    pass
 
 def differentiate(signal):
     # TODO
@@ -58,6 +73,7 @@ def threshold(signal):
 def rr_define(rr_intervals):
     # TODO
     pass
+
 
 
 if __name__ == '__main__':
