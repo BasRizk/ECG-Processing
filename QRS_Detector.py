@@ -46,43 +46,43 @@ def qrs_detect(raw_signal, win_size=0):
     rr_intervals = rr_define(thresholded)
     return rr_intervals
 
-def remove_noise(signal):
-    signal = notch_filter(signal)
-    signal = bandpass_filter(signal)
-    return signal
+def remove_noise(sig):
+    sig = notch_filter(sig)
+    sig = bandpass_filter(sig)
+    return sig
 
-def notch_filter(signal):
+def notch_filter(sig):
     #TODO
     pass
 
-def bandpass_filter(signal):
+def bandpass_filter(sig):
     #TODO
     pass
 
-def differentiate(signal):
+def differentiate(sig):
     # diff_signal = signal.copy()
-    t_0 = signal[:-4]
-    t_1 = signal[1:-3]
+    t_0 = sig[:-4]
+    t_1 = sig[1:-3]
     # T_2 = signal[2:-2]
-    t_3 = signal[3:-1]
-    t_4 = signal[4:]
+    t_3 = sig[3:-1]
+    t_4 = sig[4:]
     
     sampling_interval = (1/256)
     diff_signal = (1/(8*sampling_interval))*\
         (-t_0 - (2*t_1) + (2*t_3) + (t_4))
     return diff_signal
 
-def square(signal):
+def square(sig):
     # TODO
     pass
 
-def smooth(signal):
+def smooth(sig):
     # TODO
     # smooth the squared signal using a moving average window
     
     pass
 
-def threshold(signal):
+def threshold(sig):
     # TODO
     pass
 
@@ -90,9 +90,9 @@ def rr_define(rr_intervals):
     # TODO
     pass
 
-def plot(signal, title = "Plot of CT signal"):
-    t = np.linspace(-0.02, 0.05, signal.shape[0])
-    plt.plot(t, signal)
+def plot(sig, title = "Plot of CT signal"):
+    t = np.linspace(-0.02, 0.05, sig.shape[0])
+    plt.plot(t, sig)
     plt.xlabel('t')
     plt.ylabel('x(t)')
     plt.title(title)
