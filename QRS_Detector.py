@@ -93,7 +93,7 @@ def square(sig):
 
 def smooth(sig, win_size=5):
     # smooth the squared signal using a moving average window
-    smoothed_signal = np.zeros(sig.shape)
+    smoothed_signal = sig.copy()
     for i in range(win_size, len(sig)):
         avg_value = 0
         for v_i in range(win_size):
@@ -123,7 +123,7 @@ def plot(sig, title = "Plot of CT signal"):
 
 if __name__ == '__main__':
     raw_signal = pd.read_csv("DataN.txt", header=None)[0][:100]
-    rr_graph = qrs_detect(raw_signal) 
+    rr_graph = qrs_detect(raw_signal, win_size = 10)
         
     
     
