@@ -155,7 +155,7 @@ def plot(sig, title = "Plot of CT signal", sampling_rate = 256):
 
 
 if __name__ == '__main__':
-    raw_signal = pd.read_csv("DataN.txt", header=None)[0][:2000]
+    raw_signal = pd.read_csv("DataN.txt", header=None)[0][:]
     rr_graph = qrs_detect(raw_signal, win_size = 25)
         
     
