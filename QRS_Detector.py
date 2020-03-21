@@ -51,7 +51,7 @@ def qrs_detect(raw_signal, win_size=5):
     plot(smoothed, title="Smoothed Signal")
 
     thresholded = threshold(smoothed)
-    #plot(thresholded, title="Thresholded Signal")
+    plot(thresholded, title="Thresholded Signal")
 
     rr_intervals = rr_define(thresholded)
     #plot(rr_intervals, title="RR-Intervals")
@@ -67,8 +67,8 @@ def remove_noise(sig):
 def notch_filter(sig, cut_freq):
     fs = 256.0
     Q = 30.0
-    b, a = signal.iirnotch(cut_freq, Q, fs)
-    filtered_signal = signal.lfilter(b, a, sig)
+    numerator, denominator = signal.iirnotch(cut_freq, Q, fs)
+    filtered_signal = signal.lfilter(numerator, denominator, sig)
     return filtered_signal
 
 
@@ -77,8 +77,8 @@ def bandpass_filter(sig, low_freq, high_freq, order):
     nyquist_freq = fs * 0.5
     low = low_freq / nyquist_freq
     high = high_freq / nyquist_freq
-    b, a = signal.butter(order, [low, high], 'band')
-    filtered_signal = signal.lfilter(b, a, sig)
+    numerator, denominator = signal.butter(order, [low, high], 'band')
+    filtered_signal = signal.lfilter(numerator, denominator, sig)
     return filtered_signal
 
 def differentiate(sig):
@@ -113,11 +113,18 @@ def smooth(sig, win_size=5):
             avg_value += sig[i-win_size]
         avg_value /= win_size
         smoothed_signal[i] = avg_value
+        print(avg_value)
     return smoothed_signal
 
 def threshold(sig):
     # TODO
-    pass
+    threshold = np.var(sig)
+    return sig * np.where(sig > threshold, 1, 0)
+
+def threshold_array(some_array, threshold = 0.5, lower_value = 0, upper_value = 1):
+    print("Thresholding array with threshold %s, to get values either %s or %s" 
+             % (str(threshold), str(lower_value), str(upper_value)))
+    return np.where(some_array > threshold, upper_value, lower_value)
 
 def rr_define(rr_intervals):
     # TODO
