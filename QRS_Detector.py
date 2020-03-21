@@ -119,14 +119,8 @@ def smooth(sig, win_size=5):
     return smoothed_signal
 
 def threshold(sig):
-    # TODO
-    threshold = np.var(sig)
+    threshold = np.average(sig)
     return sig * np.where(sig > threshold, 1, 0)
-
-def threshold_array(some_array, threshold = 0.5, lower_value = 0, upper_value = 1):
-    print("Thresholding array with threshold %s, to get values either %s or %s" 
-             % (str(threshold), str(lower_value), str(upper_value)))
-    return np.where(some_array > threshold, upper_value, lower_value)
 
 def rr_define(rr_intervals):
     # TODO
