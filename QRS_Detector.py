@@ -134,6 +134,7 @@ def rr_define(sig, sampling_rate=256):
         if v == peak_value:
             if current_interval <= 100:
                 # print("SAME" + str(len(rr_intervals)))
+                current_interval += 1
                 continue
             rr_intervals.append(current_interval)
             current_interval = 0
