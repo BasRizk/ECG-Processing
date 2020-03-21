@@ -41,6 +41,9 @@ def qrs_detect(raw_signal, win_size=5):
     diff = differentiate(noise_filtered_signal)
     plot(diff, title="Differentiated Signal")
     
+    # diff2 = differentiate2(noise_filtered_signal)
+    # plot(diff2, title="Differentiated 2 Signal")
+    
     sqrd = square(diff)
     plot(sqrd, title="Squared Signal")
 
@@ -57,7 +60,8 @@ def qrs_detect(raw_signal, win_size=5):
 
 def remove_noise(sig):
     filtered_signal = notch_filter(sig, 50.0)
-    filtered_signal = bandpass_filter(filtered_signal, 0.1, 45.0, 1)        #bandpass(signal, lowcut, highcut, order)
+    filtered_signal = bandpass_filter(filtered_signal, 0.1, 45.0, 1)       
+    #bandpass(signal, lowcut, highcut, order)
     return filtered_signal
 
 def notch_filter(sig, cut_freq):
@@ -83,16 +87,16 @@ def differentiate(sig):
     t_3 = sig[3:-1]
     t_4 = sig[4:]
     
-    sampling_interval = (1/256)
-    diff_signal = (1/(8*sampling_interval))*\
+    # sampling_interval = (1/256)
+    diff_signal = (1/(8))*\
         (-t_0 - (2*t_1) + (2*t_3) + (t_4))
     return diff_signal
 
-def differentiate2(sig):
-    diff_signal = np.zeros(sig.shape)
-    for i in range(2, len(sig)-2):
-        diff_signal[i] = (1/8) * (-sig[i-2] - 2*sig[i-1] + 2*sig[i+1] + sig[i+2])
-    return diff_signal
+# def differentiate2(sig):
+#     diff_signal = np.zeros(sig.shape)
+#     for i in range(2, len(sig)-2):
+#         diff_signal[i] = (1/8) * (-sig[i-2] - 2*sig[i-1] + 2*sig[i+1] + sig[i+2])
+#     return diff_signal
 
 
 def square(sig):
