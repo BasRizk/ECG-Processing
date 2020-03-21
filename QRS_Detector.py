@@ -113,10 +113,9 @@ def smooth(sig, win_size=5):
     for i in range(win_size, len(sig)):
         avg_value = 0
         for v_i in range(win_size):
-            avg_value += sig[i-win_size]
+            avg_value += sig[i-v_i]
         avg_value /= win_size
         smoothed_signal[i] = avg_value
-        print(avg_value)
     return smoothed_signal
 
 def threshold(sig):
@@ -145,10 +144,11 @@ def plot(sig, title = "Plot of CT signal"):
 
 
 if __name__ == '__main__':
-    raw_signal = pd.read_csv("DataN.txt", header=None)[0][:100]
+    raw_signal = pd.read_csv("DataN.txt", header=None)[0][:2000]
     rr_graph = qrs_detect(raw_signal, win_size = 10)
         
     
     
+
 
 
