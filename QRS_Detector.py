@@ -16,7 +16,7 @@ complex
     - 
 """
 
-def qrs_detect(raw_signal, win_size=5):
+def qrs_detect(raw_signal, win_size=15):
     """
 
     Parameters
@@ -41,9 +41,6 @@ def qrs_detect(raw_signal, win_size=5):
     diff = differentiate(noise_filtered_signal)
     plot(diff, title="Differentiated Signal")
     
-    # diff2 = differentiate2(noise_filtered_signal)
-    # plot(diff2, title="Differentiated 2 Signal")
-    
     sqrd = square(diff)
     plot(sqrd, title="Squared Signal")
 
@@ -54,7 +51,7 @@ def qrs_detect(raw_signal, win_size=5):
     plot(thresholded, title="Thresholded Signal")
 
     rr_intervals = rr_define(thresholded)
-    #plot(rr_intervals, title="RR-Intervals")
+    plot(rr_intervals, title="RR-Intervals", sampling_rate=1)
 
     return rr_intervals
 
@@ -90,8 +87,8 @@ def differentiate(sig):
     t_3 = sig[3:-1]
     t_4 = sig[4:]
     
-    # sampling_interval = (1/256)
-    diff_signal = (1/(8))*\
+    sampling_interval = (1/256)
+    diff_signal = (1/(8*sampling_interval))*\
         (-t_0 - (2*t_1) + (2*t_3) + (t_4))
     return diff_signal
 
@@ -109,27 +106,44 @@ def square(sig):
 
 def smooth(sig, win_size=5):
     # smooth the squared signal using a moving average window
-    smoothed_signal = sig.copy()
-    for i in range(win_size, len(sig)):
+    smoothed_signal = np.zeros(sig.shape)
+    for i in range(win_size - 1, len(sig)):
         avg_value = 0
         for v_i in range(win_size):
             avg_value += sig[i-v_i]
         avg_value /= win_size
         smoothed_signal[i] = avg_value
+        # print("sig %s ...... smoothed_signal %s" % (sig[i], smoothed_signal[i]))
     return smoothed_signal
 
 def threshold(sig):
-    threshold = np.average(sig)
+    threshold = np.average(sig)*1.5
+    # threshold = np.max(sig)*0.7
     thresholded = sig.copy()
     thresholded[thresholded > threshold] = threshold
     return thresholded
 
-def rr_define(rr_intervals):
-    # TODO
-    pass
+def rr_define(sig, sampling_rate=256):
+    # peak_indices = np.argwhere(sig == np.amax(sig))
+    
+    rr_intervals = []
+    peak_value = np.amax(sig)
+    current_interval = 0
 
-def plot(sig, title = "Plot of CT signal"):
-    end_time = (1/256)*sig.shape[0]
+    for v in sig:
+        if v == peak_value:
+            if current_interval <= 100:
+                # print("SAME" + str(len(rr_intervals)))
+                continue
+            rr_intervals.append(current_interval)
+            current_interval = 0
+        else:
+            current_interval += 1
+    rr_intervals = np.array(rr_intervals)/sampling_rate
+    return rr_intervals
+
+def plot(sig, title = "Plot of CT signal", sampling_rate = 256):
+    end_time = sig.shape[0]-1/sampling_rate
     t = np.linspace(0, end_time , sig.shape[0])
     plt.plot(t, sig)
     plt.xlabel('t')
@@ -140,7 +154,7 @@ def plot(sig, title = "Plot of CT signal"):
 
 
 if __name__ == '__main__':
-    raw_signal = pd.read_csv("DataN.txt", header=None)[0][:2000]
+    raw_signal = pd.read_csv("DataN.txt", header=None)[0][:]
     rr_graph = qrs_detect(raw_signal, win_size = 10)
         
     
