@@ -47,7 +47,7 @@ def qrs_detect(raw_signal, win_size=15):
     smoothed = smooth(sqrd, win_size)
     plot(smoothed, title="Smoothed Signal")
 
-    thresholded = threshold(smoothed)
+    thresholded, threshold1 = threshold(smoothed)
     plot(thresholded, title="Thresholded Signal")
 
     rr_intervals = rr_define(thresholded)
@@ -121,7 +121,7 @@ def threshold(sig):
     # threshold = np.max(sig)*0.7
     thresholded = sig.copy()
     thresholded[thresholded > threshold] = threshold
-    return thresholded
+    return thresholded, threshold
 
 def rr_define(sig, sampling_rate=256):
     # peak_indices = np.argwhere(sig == np.amax(sig))
