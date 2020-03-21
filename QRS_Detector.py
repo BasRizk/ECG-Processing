@@ -59,7 +59,7 @@ def qrs_detect(raw_signal, win_size=5):
     return rr_intervals
 
 def remove_noise(sig):
-    filtered_signal = notch_filter(sig, 50.0)
+    filtered_signal = notch_filter2(sig, 50.0)
     filtered_signal = bandpass_filter(filtered_signal, 0.1, 45.0, 1)       
     #bandpass(signal, lowcut, highcut, order)
     return filtered_signal
@@ -71,6 +71,15 @@ def notch_filter(sig, cut_freq):
     filtered_signal = signal.lfilter(numerator, denominator, sig)
     return filtered_signal
 
+def notch_filter2(sig, cut_freq):
+    fs = 256.0
+    Q = 30.0
+    nyquist_freq = fs * 0.5
+    cut = cut_freq / nyquist_freq
+    numerator, denominator = signal.iirnotch(cut, Q, fs)
+    filtered_signal = signal.lfilter(numerator,denominator, sig)
+    return filtered_signal
+    
 
 def bandpass_filter(sig, low_freq, high_freq, order):
     fs = 256.0
