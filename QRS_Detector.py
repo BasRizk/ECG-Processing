@@ -120,7 +120,9 @@ def smooth(sig, win_size=5):
 
 def threshold(sig):
     threshold = np.average(sig)
-    return sig * np.where(sig > threshold, 1, 0)
+    thresholded = sig.copy()
+    thresholded[thresholded > threshold] = threshold
+    return thresholded
 
 def rr_define(rr_intervals):
     # TODO
