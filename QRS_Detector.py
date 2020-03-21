@@ -57,7 +57,7 @@ def qrs_detect(raw_signal, win_size=15):
 
 def remove_noise(sig):
     filtered_signal = notch_filter(sig, 50.0)
-    filtered_signal = bandpass_filter(filtered_signal, 0.1, 45.0, 1)       
+    filtered_signal = bandpass_filter(filtered_signal, 0.1, 45.0, 5)       
     #bandpass(signal, lowcut, highcut, order)
     return filtered_signal
 
@@ -67,7 +67,7 @@ def notch_filter(sig, cut_freq):
     Q = 30.0
     nyquist_freq = fs * 0.5
     cut = cut_freq / nyquist_freq
-    numerator, denominator = signal.iirnotch(cut, Q, fs)
+    numerator, denominator = signal.iirnotch(cut, Q)
     filtered_signal = signal.lfilter(numerator,denominator, sig)
     return filtered_signal
     
@@ -154,8 +154,8 @@ def plot(sig, title = "Plot of CT signal", sampling_rate = 256):
 
 
 if __name__ == '__main__':
-    raw_signal = pd.read_csv("DataN.txt", header=None)[0][:]
-    rr_graph = qrs_detect(raw_signal, win_size = 10)
+    raw_signal = pd.read_csv("DataN.txt", header=None)[0][:2000]
+    rr_graph = qrs_detect(raw_signal, win_size = 25)
         
     
     
