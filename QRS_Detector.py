@@ -48,25 +48,25 @@ def qrs_detect(raw_signal, win_size=5):
     plot(smoothed, title="Smoothed Signal")
 
     thresholded = threshold(smoothed)
-    plot(thresholded, title="Thresholded Signal")
+    #plot(thresholded, title="Thresholded Signal")
 
     rr_intervals = rr_define(thresholded)
-    plot(rr_intervals, title="RR-Intervals")
+    #plot(rr_intervals, title="RR-Intervals")
 
     return rr_intervals
 
 def remove_noise(sig):
-    filtered_signal = notch_filter(sig)
-    filtered_signal = bandpass_filter(filtered_signal, 0.1, 45, 5)        #bandpass(signal, lowcut, highcut, order)
+    filtered_signal = notch_filter(sig, 50.0)
+    filtered_signal = bandpass_filter(filtered_signal, 0.1, 45.0, 1)        #bandpass(signal, lowcut, highcut, order)
     return filtered_signal
 
-def notch_filter(sig):
+def notch_filter(sig, cut_freq):
     fs = 256.0
-    f0 = 50.0
     Q = 30.0
-    b, a = signal.iirnotch(f0, Q, fs)
+    b, a = signal.iirnotch(cut_freq, Q, fs)
     filtered_signal = signal.lfilter(b, a, sig)
     return filtered_signal
+
 
 def bandpass_filter(sig, low_freq, high_freq, order):
     fs = 256.0
@@ -88,8 +88,17 @@ def differentiate(sig):
         (-t_0 - (2*t_1) + (2*t_3) + (t_4))
     return diff_signal
 
+def differentiate2(sig):
+    diff_signal = np.zeros(sig.shape)
+    for i in range(2, len(sig)-2):
+        diff_signal[i] = (1/8) * (-sig[i-2] - 2*sig[i-1] + 2*sig[i+1] + sig[i+2])
+    return diff_signal
+
+
 def square(sig):
     return np.square(sig)
+
+
 
 def smooth(sig, win_size=5):
     # smooth the squared signal using a moving average window
