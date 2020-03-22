@@ -58,7 +58,7 @@ def qrs_detect(raw_signal, win_size=15, save=False,
     rr_intervals = rr_define(thresholded)
     plot(rr_intervals*1000, title="RR", sampling_rate=1,
          xlabel='Beat Number', ylabel='time(ms)',
-         limit=rr_intervals.shape[0])
+         limit=rr_intervals.shape[0], save=save)
     
     r_markers = create_markers(rr_define(thresholded[:plotlimit]))
     final_figure_title = "DetectedR_" + str(win_size)
