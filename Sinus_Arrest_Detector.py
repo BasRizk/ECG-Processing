@@ -36,7 +36,7 @@ def calculateMissingTimes(sig, threshold, average_time):
     return timestamps_array
 
 if __name__ == '__main__':
-    raw_signal = pd.read_csv("Data2.txt", header=None)[0][:9000]
+    raw_signal = pd.read_csv("Data2.txt", header=None)[0][:]
     missing_beats_timestamps = discoverMissingBeats(raw_signal)
     to_be_written_to_file = ""
     file = open('MissingBeats.txt', 'w')

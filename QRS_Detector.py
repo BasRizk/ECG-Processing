@@ -33,11 +33,17 @@ def qrs_detect(raw_signal, win_size=15):
 
     """
     raw_signal = np.array(raw_signal)
-    plot(raw_signal, title="Raw Signal")
-    
     noise_filtered_signal = remove_noise(raw_signal)
-    plot(noise_filtered_signal, title="Noise Removed Signal")
-
+    
+    end_time = raw_signal.shape[0]-1/256
+    t = np.linspace(0, end_time , raw_signal.shape[0])
+    plt.subplot(211)
+    plt.plot(t, raw_signal)
+    plt.subplot(212)
+    plt.plot(t, noise_filtered_signal)
+    plt.savefig("Before_After_Filter.jpg")
+    plt.show()
+    
     diff = differentiate(noise_filtered_signal)
     plot(diff, title="Differentiated Signal")
     
@@ -151,11 +157,13 @@ def plot(sig, title = "Plot of CT signal", sampling_rate = 256):
     plt.ylabel('x(t)')
     plt.title(title)
     plt.xlim([0, end_time])
+    #plt.savefig(title+".jpg")
     plt.show()
+    
 
 
 if __name__ == '__main__':
-    raw_signal = pd.read_csv("DataN.txt", header=None)[0][:]
+    raw_signal = pd.read_csv("DataN.txt", header=None)[0][:2000]
     rr_graph = qrs_detect(raw_signal, win_size = 25)
         
     
