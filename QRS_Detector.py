@@ -35,14 +35,15 @@ def qrs_detect(raw_signal, win_size=15):
     raw_signal = np.array(raw_signal)
     noise_filtered_signal = remove_noise(raw_signal)
     
-    end_time = raw_signal.shape[0]-1/256
-    t = np.linspace(0, end_time , raw_signal.shape[0])
-    plt.subplot(211)
-    plt.plot(t, raw_signal)
-    plt.subplot(212)
-    plt.plot(t, noise_filtered_signal)
-    plt.savefig("Before_After_Filter.jpg")
-    plt.show()
+    if(len(raw_signal) == 2000) :
+        end_time = raw_signal.shape[0]-1/256
+        t = np.linspace(0, end_time , raw_signal.shape[0])
+        plt.subplot(211)
+        plt.plot(t, raw_signal)
+        plt.subplot(212)
+        plt.plot(t, noise_filtered_signal)
+        plt.savefig("Before_After_Filter.jpg")
+        plt.show()
     
     diff = differentiate(noise_filtered_signal)
     plot(diff, title="Differentiated Signal")
@@ -57,8 +58,19 @@ def qrs_detect(raw_signal, win_size=15):
     plot(thresholded, title="Thresholded Signal")
 
     rr_intervals = rr_define(thresholded)
-    plot(rr_intervals, title="RR-Intervals", sampling_rate=1)
-
+    #plot(rr_intervals, title="RR-Intervals", sampling_rate=1)
+    
+    if(len(raw_signal) > 10000) :
+        end_time = rr_intervals.shape[0]-1
+        t = np.linspace(0, end_time , rr_intervals.shape[0])
+        plt.plot(t, rr_intervals*1000)
+        plt.xlabel('Beat Number')
+        plt.ylabel('time(ms)')
+        plt.title("RR Intervals")
+        plt.xlim([0, end_time])
+        plt.savefig("RR.jpg")
+        plt.show()
+        
     return rr_intervals
 
 def remove_noise(sig):
@@ -163,7 +175,7 @@ def plot(sig, title = "Plot of CT signal", sampling_rate = 256):
 
 
 if __name__ == '__main__':
-    raw_signal = pd.read_csv("DataN.txt", header=None)[0][:2000]
+    raw_signal = pd.read_csv("DataN.txt", header=None)[0][:]
     rr_graph = qrs_detect(raw_signal, win_size = 25)
         
     
