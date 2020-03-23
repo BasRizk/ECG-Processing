@@ -1,0 +1,6 @@
+In the Thresholding step, the threshold value is calculated using the average amplitude along the whole signal multiplied by single factor (avgmult), these factor was chosen experimentally
+to be 1.25.
+
+The avgmult value 1.25 is not very high nor very low, making it consider all signals, appropriately above average; bearing in mind that average would be lower than the average value of only
+the R-Wave peaks as the signal's amplitude value is mostly low (far from the peak), hence low values influence heavily the total average value and we need a multiplier value (avgmult) that 
+is greater than 1.

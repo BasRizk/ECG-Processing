@@ -26,8 +26,6 @@ def calculateMissingTimes(sig, threshold, average_time):
             current_timestamp_between_P += 1/256
         elif(current_timestamp_between_P - average_time > 0.5 and current_timestamp_between_P > average_time) :
             normalized_i = i * (1/256)
-            print(256*(normalized_i-current_timestamp_between_P))
-            print(256*(normalized_i-current_timestamp_between_P))
             timestamps_array.append((int)(256*((normalized_i-current_timestamp_between_P)+current_timestamp_between_P*0.5)))
             current_timestamp_between_P = 0
         else :
