@@ -15,7 +15,7 @@ TIPS:
 complex
 """
 
-def qrs_detect(raw_signal, win_size=15, save=False,
+def qrs_detect(raw_signal, win_size=25, save=False,
                enable_noise_filter=True, plotlimit=2000):
     """
 
@@ -32,6 +32,9 @@ def qrs_detect(raw_signal, win_size=15, save=False,
     contains the corresponding RR intervals
 
     """
+    print("Defining QRS with win_size %s and plotlimit %s" % (win_size, plotlimit))
+    if save:
+        print("-> Plots to be saved..")
     raw_signal = np.array(raw_signal)
     if enable_noise_filter:
         noise_filtered_signal = remove_noise(raw_signal)
@@ -39,41 +42,46 @@ def qrs_detect(raw_signal, win_size=15, save=False,
         plot_before_after(raw_signal, noise_filtered_signal,
                           title = "Before_After_Filter",
                           save=save, limit=plotlimit)
-    
+        print("..Noise Filtered")
         diff = differentiate(noise_filtered_signal)
     else:
+        plot(raw_signal, title="raw_signal", limit=plotlimit)
         diff = differentiate(raw_signal)
-        
     plot(diff, title="Differentiated Signal", limit=plotlimit)
-
+    print("..Signal Differentiated")
     sqrd = square(diff)
     plot(sqrd, title="Squared Signal", limit=plotlimit)
+    print("..Signal Squared")
 
     smoothed = smooth(sqrd, win_size)
     plot(smoothed, title="Smoothed Signal", limit=plotlimit)
+    print("..Signal smoothed")
 
-    thresholded, threshold1 = threshold(smoothed)
+    thresholded, threshold1 = threshold(smoothed, avg_mult=1.25)
     plot(thresholded, title="Thresholded Signal", limit=plotlimit)
+    print("..Signal thresholded")
 
-    rr_intervals = rr_define(thresholded)
+    rr_intervals = rr_define(thresholded, discard_less_than=100)
     plot(rr_intervals*1000, title="RR", sampling_rate=1,
          xlabel='Beat Number', ylabel='time(ms)',
          limit=rr_intervals.shape[0], save=save)
-    
-    r_markers = create_markers(rr_define(thresholded[:plotlimit]))
+    print("..RR Intervals Defined")
+
+    r_markers = create_markers(thresholded[:plotlimit])
+    print("..R-Wave Markers set")
     final_figure_title = "DetectedR_" + str(win_size)
     if not enable_noise_filter:
         final_figure_title = "Unfiltered_" + str(win_size)
     plot(thresholded, title = final_figure_title , sampling_rate=256,
          xlabel="t", ylabel="x(t)", markers=r_markers, save=save,
          limit=plotlimit)
+    print("R-Wave markers applied")
 
     return rr_intervals
 
-def create_markers(rr_intervals, sampling_rate=256):
-
-    r_markers = rr_intervals*256
-    first_might_miss_beat = np.argmax(r_markers)
+def create_markers(thresholded, sampling_rate=256):
+    r_markers = rr_define(thresholded, discard_less_than=100)*256
+    first_might_miss_beat = np.argmax(thresholded)
     if first_might_miss_beat not in r_markers:
         tmp = np.zeros((r_markers.shape[0]+1,))
         tmp[0] = first_might_miss_beat
@@ -135,7 +143,7 @@ def smooth(sig, win_size=5):
         # print("sig %s ...... smoothed_signal %s" % (sig[i], smoothed_signal[i]))
     return smoothed_signal
 
-def threshold(sig, avg_mult=1.5):
+def threshold(sig, avg_mult=1.25):
     threshold = np.average(sig)*avg_mult
     # threshold = np.max(sig)*0.7
     thresholded = sig.copy()
