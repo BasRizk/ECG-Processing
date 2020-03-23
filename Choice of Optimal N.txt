@@ -1,2 +1,6 @@
-the optimal N is 25 as the smoothed signal figures shows that the window size is more similar to the width of the QRS wave than the 5,15 window sizes.
-As the 5,15 shows more than one peak in the same QRS but in the 25 window size the signal is more smooth with only one peak.
+The optimal N is 25 as the smoothed signal figures shows that the window size
+is more similar to the width of the QRS wave than the 5, 15 window sizes;
+in other words, the 25 words closely observes the widest QRS wave.
+
+According to observation, as the 5, 15 shows more than one peak in the same
+QRS but in the 25 window size the signal is more smooth with only one peak.
